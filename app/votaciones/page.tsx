@@ -36,6 +36,7 @@ export default function Votes() {
   };
 
   const handleRestart = () => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     setStarted(false);
     setCurrentCategoryIndex(0);
     setVotes({});
@@ -79,7 +80,10 @@ export default function Votes() {
           </div>
 
           <button
-            onClick={() => setStarted(true)}
+            onClick={() => {
+              setStarted(true);
+              window.scrollTo({ top: 0, behavior: 'instant' });
+            }}
             className="mt-12 px-12 py-4 bg-gradient-to-r from-red-600 to-red-800 text-white text-xl font-bold rounded-full hover:from-red-700 hover:to-red-900 transition-all transform hover:scale-105 shadow-lg shadow-red-500/50"
           >
             Iniciar Votación
