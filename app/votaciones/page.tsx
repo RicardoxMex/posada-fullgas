@@ -20,7 +20,7 @@ export default function Votes() {
   };
 
   const handleNext = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
     if (currentCategoryIndex < totalCategories - 1) {
       setCurrentCategoryIndex(currentCategoryIndex + 1);
     } else {
@@ -185,8 +185,8 @@ export default function Votes() {
                 key={nominado.id}
                 onClick={() => handleVote(nominado.id)}
                 className={`relative bg-white/5 backdrop-blur-sm rounded-xl p-6 border-2 transition-all transform hover:scale-105 ${isSelected
-                    ? 'border-red-500 shadow-lg shadow-red-500/50'
-                    : 'border-white/10 hover:border-red-500/50'
+                  ? 'border-red-500 shadow-lg shadow-red-500/50'
+                  : 'border-white/10 hover:border-red-500/50'
                   }`}
               >
                 {isSelected && (
