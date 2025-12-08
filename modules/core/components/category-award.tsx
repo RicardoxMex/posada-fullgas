@@ -75,7 +75,7 @@ const CategoryCard = ({ category, index }: { category: Category; index: number }
 
 export const CategoryAward = () => {
   return (
-    <section className="max-w-7xl mx-auto px-4 py-16">
+    <section id='nominados' className="max-w-7xl mx-auto px-4 py-16">
       {/* Header */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 rounded-full border border-red-400/30 backdrop-blur-sm mb-6">

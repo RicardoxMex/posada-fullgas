@@ -1,4 +1,5 @@
 import { Award } from "lucide-react";
+import Link from "next/link";
 
 export const Awards = () => {
     return (
@@ -40,14 +41,14 @@ export const Awards = () => {
             {/* Botones */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
                 {/* Botón Votar Ahora */}
-                <button className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-6 px-8 rounded-full text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3">
+                <Link href={'/votaciones'} className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-6 px-8 rounded-full text-xl transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-3">
                     🗳️ VOTAR AHORA
-                </button>
+                </Link>
 
                 {/* Botón Ver Nominados */}
-                <button className="w-full bg-transparent border-2 border-white hover:bg-white/10 text-white font-bold py-6 px-8 rounded-full text-xl transition-all duration-300">
-                    VER NOMINADOS
-                </button>
+                <Link href={'#nominados'} className="w-full bg-transparent border-2 border-white hover:bg-white/10 text-white font-bold py-6 px-8 rounded-full text-xl transition-all duration-300 text-center">
+                    VER CATEGORÍAS
+                </Link>
             </div>
         </section>
     );

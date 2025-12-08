@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import categories from '@/data/categories.json';
 
 type Votes = Record<string, string>;
@@ -20,6 +20,7 @@ export default function Votes() {
   };
 
   const handleNext = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (currentCategoryIndex < totalCategories - 1) {
       setCurrentCategoryIndex(currentCategoryIndex + 1);
     } else {
@@ -28,6 +29,7 @@ export default function Votes() {
   };
 
   const handlePrevious = () => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
     if (currentCategoryIndex > 0) {
       setCurrentCategoryIndex(currentCategoryIndex - 1);
     }
@@ -182,11 +184,10 @@ export default function Votes() {
               <button
                 key={nominado.id}
                 onClick={() => handleVote(nominado.id)}
-                className={`relative bg-white/5 backdrop-blur-sm rounded-xl p-6 border-2 transition-all transform hover:scale-105 ${
-                  isSelected
+                className={`relative bg-white/5 backdrop-blur-sm rounded-xl p-6 border-2 transition-all transform hover:scale-105 ${isSelected
                     ? 'border-red-500 shadow-lg shadow-red-500/50'
                     : 'border-white/10 hover:border-red-500/50'
-                }`}
+                  }`}
               >
                 {isSelected && (
                   <div className="absolute top-4 right-4 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
