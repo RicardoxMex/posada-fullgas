@@ -1,0 +1,139 @@
+[
+  {
+    "id": "mejor-departamento",
+    "name": "Mejor Departamento del Año",
+    "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80",
+    "nominados": [
+      {
+        "id": "ventas",
+        "name": "Ventas",
+        "image": "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=400&q=80"
+      },
+      {
+        "id": "marketing",
+        "name": "Marketing",
+        "image": "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&q=80"
+      },
+      {
+        "id": "it",
+        "name": "IT",
+        "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&q=80"
+      }
+    ]
+  },
+  {
+    "id": "mas-puntual",
+    "name": "El Más Puntual",
+    "image": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=800&q=80",
+    "nominados": [
+      {
+        "id": "persona1",
+        "name": "Ana García",
+        "image": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80"
+      },
+      {
+        "id": "persona2",
+        "name": "Carlos Rodríguez",
+        "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80"
+      },
+      {
+        "id": "persona3",
+        "name": "María López",
+        "image": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80"
+      }
+    ]
+  },
+  {
+    "id": "mejor-compañero",
+    "name": "Mejor Compañero del Año",
+    "image": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80",
+    "nominados": [
+      {
+        "id": "persona4",
+        "name": "Luis Martínez",
+        "image": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80"
+      },
+      {
+        "id": "persona5",
+        "name": "Sofia Torres",
+        "image": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80"
+      },
+      {
+        "id": "persona6",
+        "name": "Diego Fernández",
+        "image": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&q=80"
+      },
+      {
+        "id": "persona7",
+        "name": "Laura Sánchez",
+        "image": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80"
+      }
+    ]
+  },
+  {
+    "id": "mas-creativo",
+    "name": "El Más Creativo",
+    "image": "https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=800&q=80",
+    "nominados": [
+      {
+        "id": "persona8",
+        "name": "Roberto Díaz",
+        "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80"
+      },
+      {
+        "id": "persona9",
+        "name": "Patricia Ruiz",
+        "image": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&q=80"
+      },
+      {
+        "id": "persona10",
+        "name": "Javier Morales",
+        "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&q=80"
+      }
+    ]
+  },
+  {
+    "id": "mejor-lider",
+    "name": "Mejor Líder",
+    "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
+    "nominados": [
+      {
+        "id": "persona11",
+        "name": "Carmen Jiménez",
+        "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80"
+      },
+      {
+        "id": "persona12",
+        "name": "Miguel Ángel Castro",
+        "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80"
+      },
+      {
+        "id": "persona13",
+        "name": "Elena Vargas",
+        "image": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&q=80"
+      }
+    ]
+  },
+  {
+    "id": "espiritu-positivo",
+    "name": "Espíritu Más Positivo",
+    "image": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&q=80",
+    "nominados": [
+      {
+        "id": "persona14",
+        "name": "Fernando Ortiz",
+        "image": "https://images.unsplash.com/photo-1463453091185-61582044d556?w=400&q=80"
+      },
+      {
+        "id": "persona15",
+        "name": "Isabel Romero",
+        "image": "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400&q=80"
+      },
+      {
+        "id": "persona16",
+        "name": "Andrés Navarro",
+        "image": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=400&q=80"
+      }
+    ]
+  }
+]
