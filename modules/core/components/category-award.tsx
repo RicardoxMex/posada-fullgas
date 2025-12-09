@@ -52,7 +52,7 @@ const CategoryCard = ({ category, index }: { category: Category; index: number }
         </div>
 
         {/* Botón Votar */}
-        <button className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-full transition-all duration-300 flex items-center gap-2 group-hover:scale-105">
+        {/* <button className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-full transition-all duration-300 flex items-center gap-2 group-hover:scale-105">
           Votar
           <svg
             className="w-4 h-4"
@@ -67,7 +67,7 @@ const CategoryCard = ({ category, index }: { category: Category; index: number }
               d="M9 5l7 7-7 7"
             />
           </svg>
-        </button>
+        </button> */}
       </div>
     </div>
   </div>

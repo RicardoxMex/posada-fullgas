@@ -8,9 +8,7 @@ import { supabase } from '@/lib/supabase';
 
 type Votes = Record<string, string>;
 
-const VOTE_TIMEOUT = 30 * 60 * 1000; // 30 minutos en milisegundos
-const SESSION_COOKIE = 'vote_session_id';
-const VOTE_TIMESTAMP_COOKIE = 'vote_timestamp';
+const USER_ID_COOKIE = 'user_voting_id';
 
 export default function Votes() {
   const router = useRouter();
@@ -19,8 +17,8 @@ export default function Votes() {
   const [votes, setVotes] = useState<Votes>({});
   const [showSummary, setShowSummary] = useState(false);
   const [canVote, setCanVote] = useState(true);
-  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingVote, setIsCheckingVote] = useState(true);
 
   const currentCategory = categories[currentCategoryIndex];
   const totalCategories = categories.length;
@@ -29,56 +27,48 @@ export default function Votes() {
     checkVoteEligibility();
   }, []);
 
-  useEffect(() => {
-    if (!canVote && timeRemaining !== null && timeRemaining > 0) {
-      const timer = setInterval(() => {
-        const timestamp = Cookies.get(VOTE_TIMESTAMP_COOKIE);
-        if (timestamp) {
-          const elapsed = Date.now() - parseInt(timestamp);
-          const remaining = VOTE_TIMEOUT - elapsed;
-          
-          if (remaining <= 0) {
-            setCanVote(true);
-            setTimeRemaining(null);
-            Cookies.remove(SESSION_COOKIE);
-            Cookies.remove(VOTE_TIMESTAMP_COOKIE);
-          } else {
-            setTimeRemaining(remaining);
-          }
-        }
-      }, 1000);
+  const generateUserId = () => {
+    return `user-${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+  };
 
-      return () => clearInterval(timer);
+  const getUserId = () => {
+    let userId = Cookies.get(USER_ID_COOKIE);
+    if (!userId) {
+      userId = generateUserId();
+      Cookies.set(USER_ID_COOKIE, userId, { expires: 365 * 10 }); // 10 años
     }
-  }, [canVote, timeRemaining]);
+    return userId;
+  };
 
-  const checkVoteEligibility = () => {
-    const sessionId = Cookies.get(SESSION_COOKIE);
-    const timestamp = Cookies.get(VOTE_TIMESTAMP_COOKIE);
+  const checkVoteEligibility = async () => {
+    setIsCheckingVote(true);
+    try {
+      const userId = getUserId();
+      
+      // Verificar si el usuario ya votó en la base de datos
+      const { data, error } = await supabase
+        .from('votes')
+        .select('session_id')
+        .eq('session_id', userId)
+        .limit(1);
 
-    if (sessionId && timestamp) {
-      const elapsed = Date.now() - parseInt(timestamp);
-      const remaining = VOTE_TIMEOUT - elapsed;
+      if (error) {
+        console.error('Error al verificar votos:', error);
+        setCanVote(true);
+        return;
+      }
 
-      if (remaining > 0) {
+      if (data && data.length > 0) {
         setCanVote(false);
-        setTimeRemaining(remaining);
       } else {
-        Cookies.remove(SESSION_COOKIE);
-        Cookies.remove(VOTE_TIMESTAMP_COOKIE);
         setCanVote(true);
       }
+    } catch (error) {
+      console.error('Error:', error);
+      setCanVote(true);
+    } finally {
+      setIsCheckingVote(false);
     }
-  };
-
-  const generateSessionId = () => {
-    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  };
-
-  const formatTime = (ms: number) => {
-    const minutes = Math.floor(ms / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   const handleVote = (nominadoId: string) => {
@@ -114,10 +104,25 @@ export default function Votes() {
     
     setIsSubmitting(true);
     try {
-      const sessionId = generateSessionId();
+      const userId = getUserId();
+      
+      // Verificar una vez más antes de enviar
+      const { data: existingVotes } = await supabase
+        .from('votes')
+        .select('session_id')
+        .eq('session_id', userId)
+        .limit(1);
+
+      if (existingVotes && existingVotes.length > 0) {
+        alert('Ya has votado anteriormente. Solo se permite votar una vez.');
+        setCanVote(false);
+        setIsSubmitting(false);
+        handleRestart();
+        return;
+      }
       
       const votesToSubmit = Object.entries(votes).map(([categoryId, nomineeId]) => ({
-        session_id: sessionId,
+        session_id: userId,
         category_id: categoryId,
         nominee_id: nomineeId,
       }));
@@ -132,14 +137,10 @@ export default function Votes() {
         setIsSubmitting(false);
         return;
       }
-
-      Cookies.set(SESSION_COOKIE, sessionId, { expires: 30 / 1440 }); // 30 minutos
-      Cookies.set(VOTE_TIMESTAMP_COOKIE, Date.now().toString(), { expires: 30 / 1440 });
       
       setCanVote(false);
-      setTimeRemaining(VOTE_TIMEOUT);
       
-      alert('¡Votos enviados correctamente! Podrás votar nuevamente en 30 minutos.');
+      alert('¡Votos enviados correctamente! Gracias por tu participación.');
       handleRestart();
     } catch (error) {
       console.error('Error:', error);
@@ -149,31 +150,54 @@ export default function Votes() {
     }
   };
 
+  if (isCheckingVote) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="max-w-2xl w-full text-center space-y-8">
+          <div className="space-y-4">
+            <div className="text-6xl mb-4">⏳</div>
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Verificando elegibilidad...
+            </h1>
+            <p className="text-xl text-gray-300">
+              Por favor espera un momento
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!canVote) {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
         <div className="max-w-2xl w-full text-center space-y-8">
           <div className="space-y-4">
-            <div className="text-6xl mb-4">⏰</div>
+            <div className="text-6xl mb-4">✅</div>
             <h1 className="text-4xl font-bold text-white mb-4">
-              Ya has votado recientemente
+              Ya has votado
             </h1>
             <p className="text-xl text-gray-300">
-              Podrás votar nuevamente en:
+              Solo se permite votar una vez
             </p>
-            <div className="text-5xl font-bold text-red-500 mt-6">
-              {timeRemaining !== null && formatTime(timeRemaining)}
-            </div>
             <p className="text-gray-400 mt-4">
               Gracias por tu participación
             </p>
           </div>
-          <button
-            onClick={() => router.push('/resultados')}
-            className="mt-8 px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-full hover:from-blue-700 hover:to-blue-900 transition-all shadow-lg shadow-blue-500/50"
-          >
-            Ver Resultados
-          </button>
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={() => router.push('/')}
+              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+            >
+              Página Principal
+            </button>
+            <button
+              onClick={() => router.push('/resultados')}
+              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-full hover:from-blue-700 hover:to-blue-900 transition-all shadow-lg shadow-blue-500/50"
+            >
+              Ver Resultados
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -191,7 +215,7 @@ export default function Votes() {
               Participa en la votación de las {totalCategories} categorías
             </p>
             <p className="text-sm text-yellow-400 mt-2">
-              ⚠️ Solo podrás votar una vez cada 30 minutos
+              ⚠️ Solo podrás votar una vez
             </p>
           </div>
 
@@ -219,6 +243,12 @@ export default function Votes() {
           </div>
 
           <div className="flex gap-4 justify-center mt-12">
+            <button
+              onClick={() => router.push('/')}
+              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+            >
+              Página Principal
+            </button>
             <button
               onClick={() => router.push('/resultados')}
               className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
@@ -292,6 +322,12 @@ export default function Votes() {
 
           <div className="flex gap-4 justify-center mt-8">
             <button
+              onClick={() => router.push('/')}
+              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+            >
+              Página Principal
+            </button>
+            <button
               onClick={handleRestart}
               className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
             >
@@ -361,21 +397,31 @@ export default function Votes() {
           })}
         </div>
 
-        <div className="flex gap-4 justify-between mt-8">
-          <button
-            onClick={handlePrevious}
-            disabled={currentCategoryIndex === 0}
-            className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
-          >
-            ← Anterior
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={!votes[currentCategory.id]}
-            className="px-8 py-3 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-full hover:from-red-700 hover:to-red-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/50"
-          >
-            {currentCategoryIndex === totalCategories - 1 ? 'Ver Resumen' : 'Siguiente →'}
-          </button>
+        <div className="space-y-4 mt-8">
+          <div className="flex gap-4 justify-between">
+            <button
+              onClick={handlePrevious}
+              disabled={currentCategoryIndex === 0}
+              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
+            >
+              ← Anterior
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={!votes[currentCategory.id]}
+              className="px-8 py-3 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-full hover:from-red-700 hover:to-red-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/50"
+            >
+              {currentCategoryIndex === totalCategories - 1 ? 'Ver Resumen' : 'Siguiente →'}
+            </button>
+          </div>
+          <div className="flex justify-center">
+            <button
+              onClick={() => router.push('/')}
+              className="px-6 py-2 bg-white/5 text-gray-300 text-sm font-medium rounded-full hover:bg-white/10 transition-all border border-white/10"
+            >
+              ← Volver a Página Principal
+            </button>
+          </div>
         </div>
       </div>
     </div>
