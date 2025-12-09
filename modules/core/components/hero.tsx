@@ -31,15 +31,20 @@ export const Hero: React.FC = () => (
                         <p className="text-2xl font-bold text-white mt-0.5">10 de Diciembre 2025</p>
                     </div>
                 </div>
-                <div className="flex-1 flex gap-4 items-center px-6 py-5 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-400/30 backdrop-blur-sm shadow-lg shadow-green-500/10 hover:shadow-green-500/20 transition-all duration-300 hover:scale-[1.02]">
+                <a 
+                    href="https://maps.app.goo.gl/cezL2Nz5FovDzjqS8" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex-1 flex gap-4 items-center px-6 py-5 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-400/30 backdrop-blur-sm shadow-lg shadow-green-500/10 hover:shadow-green-500/20 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                >
                     <div className="p-2.5 bg-green-500/20 rounded-lg">
                         <MapPin className="w-7 h-7 text-green-200" />
                     </div>
                     <div className="text-left">
                         <span className="block text-xs text-green-300/80 font-medium uppercase tracking-wider">Ubicación</span>
-                        <p className="text-2xl font-bold text-white mt-0.5">Por confirmar</p>
+                        <p className="text-2xl font-bold text-white mt-0.5">Villa Catarina</p>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </section>
