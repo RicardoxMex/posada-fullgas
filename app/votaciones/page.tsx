@@ -1,19 +1,85 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 import categories from '@/data/categories.json';
+import { supabase } from '@/lib/supabase';
 
 type Votes = Record<string, string>;
 
+const VOTE_TIMEOUT = 30 * 60 * 1000; // 30 minutos en milisegundos
+const SESSION_COOKIE = 'vote_session_id';
+const VOTE_TIMESTAMP_COOKIE = 'vote_timestamp';
+
 export default function Votes() {
+  const router = useRouter();
   const [started, setStarted] = useState(false);
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [votes, setVotes] = useState<Votes>({});
   const [showSummary, setShowSummary] = useState(false);
+  const [canVote, setCanVote] = useState(true);
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentCategory = categories[currentCategoryIndex];
   const totalCategories = categories.length;
+
+  useEffect(() => {
+    checkVoteEligibility();
+  }, []);
+
+  useEffect(() => {
+    if (!canVote && timeRemaining !== null && timeRemaining > 0) {
+      const timer = setInterval(() => {
+        const timestamp = Cookies.get(VOTE_TIMESTAMP_COOKIE);
+        if (timestamp) {
+          const elapsed = Date.now() - parseInt(timestamp);
+          const remaining = VOTE_TIMEOUT - elapsed;
+          
+          if (remaining <= 0) {
+            setCanVote(true);
+            setTimeRemaining(null);
+            Cookies.remove(SESSION_COOKIE);
+            Cookies.remove(VOTE_TIMESTAMP_COOKIE);
+          } else {
+            setTimeRemaining(remaining);
+          }
+        }
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [canVote, timeRemaining]);
+
+  const checkVoteEligibility = () => {
+    const sessionId = Cookies.get(SESSION_COOKIE);
+    const timestamp = Cookies.get(VOTE_TIMESTAMP_COOKIE);
+
+    if (sessionId && timestamp) {
+      const elapsed = Date.now() - parseInt(timestamp);
+      const remaining = VOTE_TIMEOUT - elapsed;
+
+      if (remaining > 0) {
+        setCanVote(false);
+        setTimeRemaining(remaining);
+      } else {
+        Cookies.remove(SESSION_COOKIE);
+        Cookies.remove(VOTE_TIMESTAMP_COOKIE);
+        setCanVote(true);
+      }
+    }
+  };
+
+  const generateSessionId = () => {
+    return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  };
+
+  const formatTime = (ms: number) => {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
 
   const handleVote = (nominadoId: string) => {
     setVotes({ ...votes, [currentCategory.id]: nominadoId });
@@ -43,6 +109,76 @@ export default function Votes() {
     setShowSummary(false);
   };
 
+  const handleSubmitVotes = async () => {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      const sessionId = generateSessionId();
+      
+      const votesToSubmit = Object.entries(votes).map(([categoryId, nomineeId]) => ({
+        session_id: sessionId,
+        category_id: categoryId,
+        nominee_id: nomineeId,
+      }));
+
+      const { error } = await supabase
+        .from('votes')
+        .insert(votesToSubmit);
+
+      if (error) {
+        console.error('Error al guardar votos:', error);
+        alert('Hubo un error al guardar tus votos. Por favor intenta de nuevo.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      Cookies.set(SESSION_COOKIE, sessionId, { expires: 30 / 1440 }); // 30 minutos
+      Cookies.set(VOTE_TIMESTAMP_COOKIE, Date.now().toString(), { expires: 30 / 1440 });
+      
+      setCanVote(false);
+      setTimeRemaining(VOTE_TIMEOUT);
+      
+      alert('¡Votos enviados correctamente! Podrás votar nuevamente en 30 minutos.');
+      handleRestart();
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Hubo un error inesperado. Por favor intenta de nuevo.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (!canVote) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-4">
+        <div className="max-w-2xl w-full text-center space-y-8">
+          <div className="space-y-4">
+            <div className="text-6xl mb-4">⏰</div>
+            <h1 className="text-4xl font-bold text-white mb-4">
+              Ya has votado recientemente
+            </h1>
+            <p className="text-xl text-gray-300">
+              Podrás votar nuevamente en:
+            </p>
+            <div className="text-5xl font-bold text-red-500 mt-6">
+              {timeRemaining !== null && formatTime(timeRemaining)}
+            </div>
+            <p className="text-gray-400 mt-4">
+              Gracias por tu participación
+            </p>
+          </div>
+          <button
+            onClick={() => router.push('/resultados')}
+            className="mt-8 px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-full hover:from-blue-700 hover:to-blue-900 transition-all shadow-lg shadow-blue-500/50"
+          >
+            Ver Resultados
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (!started) {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
@@ -53,6 +189,9 @@ export default function Votes() {
             </h1>
             <p className="text-xl text-gray-300">
               Participa en la votación de las {totalCategories} categorías
+            </p>
+            <p className="text-sm text-yellow-400 mt-2">
+              ⚠️ Solo podrás votar una vez cada 30 minutos
             </p>
           </div>
 
@@ -79,15 +218,23 @@ export default function Votes() {
             ))}
           </div>
 
-          <button
-            onClick={() => {
-              setStarted(true);
-              window.scrollTo({ top: 0, behavior: 'instant' });
-            }}
-            className="mt-12 px-12 py-4 bg-gradient-to-r from-red-600 to-red-800 text-white text-xl font-bold rounded-full hover:from-red-700 hover:to-red-900 transition-all transform hover:scale-105 shadow-lg shadow-red-500/50"
-          >
-            Iniciar Votación
-          </button>
+          <div className="flex gap-4 justify-center mt-12">
+            <button
+              onClick={() => router.push('/resultados')}
+              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+            >
+              Ver Resultados
+            </button>
+            <button
+              onClick={() => {
+                setStarted(true);
+                window.scrollTo({ top: 0, behavior: 'instant' });
+              }}
+              className="px-12 py-4 bg-gradient-to-r from-red-600 to-red-800 text-white text-xl font-bold rounded-full hover:from-red-700 hover:to-red-900 transition-all transform hover:scale-105 shadow-lg shadow-red-500/50"
+            >
+              Iniciar Votación
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -151,10 +298,11 @@ export default function Votes() {
               Volver al Inicio
             </button>
             <button
-              onClick={() => alert('Votos enviados correctamente')}
-              className="px-8 py-3 bg-gradient-to-r from-green-600 to-green-800 text-white font-semibold rounded-full hover:from-green-700 hover:to-green-900 transition-all shadow-lg shadow-green-500/50"
+              onClick={handleSubmitVotes}
+              disabled={isSubmitting || Object.keys(votes).length === 0}
+              className="px-8 py-3 bg-gradient-to-r from-green-600 to-green-800 text-white font-semibold rounded-full hover:from-green-700 hover:to-green-900 transition-all shadow-lg shadow-green-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Confirmar Votos
+              {isSubmitting ? 'Enviando...' : 'Confirmar Votos'}
             </button>
           </div>
         </div>
