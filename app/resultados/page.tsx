@@ -18,7 +18,7 @@ type CategoryResults = {
 
 // CONFIGURA AQUÍ LA FECHA Y HORA DE PUBLICACIÓN DE RESULTADOS
 // Formato: 'YYYY-MM-DDTHH:mm:ss' (hora local)
-const RESULTS_RELEASE_DATE = new Date('2025-12-10T17:00:00');
+const RESULTS_RELEASE_DATE = new Date('2025-12-10T17:30:00');
 
 export default function Results() {
   const router = useRouter();

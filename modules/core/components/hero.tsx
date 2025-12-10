@@ -22,27 +22,27 @@ export const Hero: React.FC = () => (
             </div>
 
             <div className="flex flex-col md:flex-row gap-6 justify-center items-stretch max-w-4xl mx-auto">
-                <div className="flex-1 flex gap-4 items-center px-6 py-5 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-xl border border-red-400/30 backdrop-blur-sm shadow-lg shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-300 hover:scale-[1.02]">
-                    <div className="p-2.5 bg-red-500/20 rounded-lg">
-                        <Calendar className="w-7 h-7 text-red-200" />
+                <div className="flex-1 flex gap-3 md:gap-4 items-center px-4 md:px-6 py-4 md:py-5 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-xl border border-red-400/30 backdrop-blur-sm shadow-lg shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-300 hover:scale-[1.02]">
+                    <div className="p-2 md:p-2.5 bg-red-500/20 rounded-lg">
+                        <Calendar className="w-5 h-5 md:w-7 md:h-7 text-red-200" />
                     </div>
                     <div className="text-left">
                         <span className="block text-xs text-red-300/80 font-medium uppercase tracking-wider">Fecha</span>
-                        <p className="text-2xl font-bold text-white mt-0.5">10 de Diciembre 2025</p>
+                        <p className="text-lg md:text-2xl font-bold text-white mt-0.5">10 de Diciembre 2025</p>
                     </div>
                 </div>
                 <a 
                     href="https://maps.app.goo.gl/cezL2Nz5FovDzjqS8" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="flex-1 flex gap-4 items-center px-6 py-5 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-400/30 backdrop-blur-sm shadow-lg shadow-green-500/10 hover:shadow-green-500/20 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
+                    className="flex-1 flex gap-3 md:gap-4 items-center px-4 md:px-6 py-4 md:py-5 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-xl border border-green-400/30 backdrop-blur-sm shadow-lg shadow-green-500/10 hover:shadow-green-500/20 transition-all duration-300 hover:scale-[1.02] cursor-pointer"
                 >
-                    <div className="p-2.5 bg-green-500/20 rounded-lg">
-                        <MapPin className="w-7 h-7 text-green-200" />
+                    <div className="p-2 md:p-2.5 bg-green-500/20 rounded-lg">
+                        <MapPin className="w-5 h-5 md:w-7 md:h-7 text-green-200" />
                     </div>
                     <div className="text-left">
                         <span className="block text-xs text-green-300/80 font-medium uppercase tracking-wider">Ubicación</span>
-                        <p className="text-2xl font-bold text-white mt-0.5">Villa Catarina</p>
+                        <p className="text-lg md:text-2xl font-bold text-white mt-0.5">Villa Catarina</p>
                     </div>
                 </a>
             </div>

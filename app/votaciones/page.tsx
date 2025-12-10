@@ -184,16 +184,16 @@ export default function Votes() {
               Gracias por tu participación
             </p>
           </div>
-          <div className="flex gap-4 justify-center">
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center">
             <button
               onClick={() => router.push('/')}
-              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+              className="px-6 md:px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20 text-sm md:text-base"
             >
               Página Principal
             </button>
             <button
               onClick={() => router.push('/resultados')}
-              className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-full hover:from-blue-700 hover:to-blue-900 transition-all shadow-lg shadow-blue-500/50"
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-full hover:from-blue-700 hover:to-blue-900 transition-all shadow-lg shadow-blue-500/50 text-sm md:text-base"
             >
               Ver Resultados
             </button>
@@ -217,41 +217,38 @@ export default function Votes() {
             <p className="text-sm text-yellow-400 mt-2">
               ⚠️ Solo podrás votar una vez
             </p>
+            
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-red-500/50 transition-all"
-              >
-                <div className="aspect-video rounded-lg overflow-hidden mb-4">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h3 className="text-lg font-semibold text-white mb-2">
-                  {category.name}
-                </h3>
-                <p className="text-sm text-gray-400">
-                  {category.nominados.length} nominados
-                </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-2xl mx-auto">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 text-center">
+              <div className="text-5xl font-bold text-red-500 mb-2">
+                {categories.length}
               </div>
-            ))}
+              <p className="text-lg text-gray-300">
+                Categorías
+              </p>
+            </div>
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 text-center">
+              <div className="text-5xl font-bold text-red-500 mb-2">
+                {categories.reduce((total, category) => total + category.nominados.length, 0)}
+              </div>
+              <p className="text-lg text-gray-300">
+                Nominados
+              </p>
+            </div>
           </div>
 
-          <div className="flex gap-4 justify-center mt-12">
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center mt-12">
             <button
               onClick={() => router.push('/')}
-              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+              className="px-6 md:px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20 text-sm md:text-base"
             >
               Página Principal
             </button>
             <button
               onClick={() => router.push('/resultados')}
-              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+              className="px-6 md:px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20 text-sm md:text-base"
             >
               Ver Resultados
             </button>
@@ -260,7 +257,7 @@ export default function Votes() {
                 setStarted(true);
                 window.scrollTo({ top: 0, behavior: 'instant' });
               }}
-              className="px-12 py-4 bg-gradient-to-r from-red-600 to-red-800 text-white text-xl font-bold rounded-full hover:from-red-700 hover:to-red-900 transition-all transform hover:scale-105 shadow-lg shadow-red-500/50"
+              className="px-8 md:px-12 py-3 md:py-4 bg-gradient-to-r from-red-600 to-red-800 text-white text-lg md:text-xl font-bold rounded-full hover:from-red-700 hover:to-red-900 transition-all transform hover:scale-105 shadow-lg shadow-red-500/50"
             >
               Iniciar Votación
             </button>
@@ -320,23 +317,23 @@ export default function Votes() {
             })}
           </div>
 
-          <div className="flex gap-4 justify-center mt-8">
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center mt-8">
             <button
               onClick={() => router.push('/')}
-              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+              className="px-6 md:px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20 text-sm md:text-base"
             >
               Página Principal
             </button>
             <button
               onClick={handleRestart}
-              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20"
+              className="px-6 md:px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all border border-white/20 text-sm md:text-base"
             >
               Volver al Inicio
             </button>
             <button
               onClick={handleSubmitVotes}
               disabled={isSubmitting || Object.keys(votes).length === 0}
-              className="px-8 py-3 bg-gradient-to-r from-green-600 to-green-800 text-white font-semibold rounded-full hover:from-green-700 hover:to-green-900 transition-all shadow-lg shadow-green-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-green-600 to-green-800 text-white font-semibold rounded-full hover:from-green-700 hover:to-green-900 transition-all shadow-lg shadow-green-500/50 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
             >
               {isSubmitting ? 'Enviando...' : 'Confirmar Votos'}
             </button>
@@ -398,18 +395,18 @@ export default function Votes() {
         </div>
 
         <div className="space-y-4 mt-8">
-          <div className="flex gap-4 justify-between">
+          <div className="flex flex-wrap gap-3 md:gap-4 justify-center md:justify-between">
             <button
               onClick={handlePrevious}
               disabled={currentCategoryIndex === 0}
-              className="px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
+              className="px-6 md:px-8 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed border border-white/20 text-sm md:text-base"
             >
               ← Anterior
             </button>
             <button
               onClick={handleNext}
               disabled={!votes[currentCategory.id]}
-              className="px-8 py-3 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-full hover:from-red-700 hover:to-red-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/50"
+              className="px-6 md:px-8 py-3 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-full hover:from-red-700 hover:to-red-900 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-red-500/50 text-sm md:text-base"
             >
               {currentCategoryIndex === totalCategories - 1 ? 'Ver Resumen' : 'Siguiente →'}
             </button>
@@ -417,7 +414,7 @@ export default function Votes() {
           <div className="flex justify-center">
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-2 bg-white/5 text-gray-300 text-sm font-medium rounded-full hover:bg-white/10 transition-all border border-white/10"
+              className="px-4 md:px-6 py-2 bg-white/5 text-gray-300 text-xs md:text-sm font-medium rounded-full hover:bg-white/10 transition-all border border-white/10"
             >
               ← Volver a Página Principal
             </button>
