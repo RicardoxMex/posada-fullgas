@@ -329,6 +329,7 @@ export default function Results() {
                       <h2 className="text-3xl font-bold text-white mb-2">
                         {category.name}
                       </h2>
+                      <p className="text-gray-300 mb-2">{category.description}</p>
                       <p className="text-gray-400">
                         Total de votos: <span className="text-white font-semibold">{totalVotes}</span>
                       </p>
@@ -453,7 +454,8 @@ export default function Results() {
           <h1 className="text-4xl font-bold text-white">
             {currentCategory.name}
           </h1>
-          <p className="text-gray-300">
+          <p className="text-lg text-gray-300 mb-2">{currentCategory.description}</p>
+          <p className="text-sm text-gray-400">
             Total de votos: <span className="text-white font-semibold">{totalVotes}</span>
           </p>
         </div>

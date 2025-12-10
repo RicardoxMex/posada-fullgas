@@ -9,6 +9,7 @@ interface Nominee {
 interface Category {
   id: string;
   name: string;
+  description: string;
   nominados: Nominee[];
   image?: string;
 }
@@ -38,9 +39,14 @@ const CategoryCard = ({ category, index }: { category: Category; index: number }
       </div>
 
       {/* Título */}
-      <h3 className="text-3xl font-bold text-white mb-6">
+      <h3 className="text-3xl font-bold text-white mb-3">
         {category.name}
       </h3>
+      
+      {/* Descripción */}
+      <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+        {category.description}
+      </p>
 
       {/* Contador de nominados */}
       <div className="flex items-center justify-between">

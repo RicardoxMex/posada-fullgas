@@ -290,9 +290,10 @@ export default function Votes() {
                   key={category.id}
                   className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10"
                 >
-                  <h3 className="text-xl font-semibold text-white mb-4">
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     {category.name}
                   </h3>
+                  <p className="text-sm text-gray-400 mb-4">{category.description}</p>
                   {votedNominado ? (
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-16 rounded-full overflow-hidden">
@@ -359,7 +360,8 @@ export default function Votes() {
           <h1 className="text-4xl font-bold text-white">
             {currentCategory.name}
           </h1>
-          <p className="text-gray-300">Selecciona tu nominado favorito</p>
+          <p className="text-lg text-gray-300 mb-2">{currentCategory.description}</p>
+          <p className="text-sm text-gray-400">Selecciona tu nominado favorito</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
