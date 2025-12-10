@@ -85,7 +85,7 @@ export const CategoryAward = () => {
       {/* Header */}
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 rounded-full border border-red-400/30 backdrop-blur-sm mb-6">
-          <span className="text-sm font-medium text-red-300">PREMIOS 2024</span>
+          <span className="text-sm font-medium text-red-300">PREMIOS 2025</span>
         </div>
         <h2 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-orange-300 bg-clip-text text-transparent">
           Categorías de Premiación
